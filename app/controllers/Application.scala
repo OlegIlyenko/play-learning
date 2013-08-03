@@ -2,11 +2,24 @@ package controllers
 
 import play.api._
 import play.api.mvc._
+import views.html.hello
+import scaldi.{Injectable, Injector}
+import model.BookDao
 
-object Application extends Controller {
-  
+class Application(implicit inj: Injector) extends Controller with Injectable {
+
+  val bookDao = inject [BookDao]
+
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    Ok("Hello my N-th play example app !11111")
   }
-  
+
+  def greet(times: Int) = Action {
+    Ok(hello(1 to times map ("Hello user " + _) toList))
+  }
+
+  def books = Action {
+    Ok(views.html.books.list(bookDao.findAll))
+  }
+
 }
