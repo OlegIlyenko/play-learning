@@ -5,12 +5,13 @@
 # Home page
 GET     /                           controllers.Application.index
 
-GET     /books                      @controllers.Books.books
-GET     /book/add                   @controllers.Books.bookAdd
-GET     /book/:id                   @controllers.Books.book(id: Int)
-GET     /book/:id/edit              @controllers.Books.bookEdit(id: Int)
+GET     /books                      @controllers.Books.list
+GET     /book/add                   @controllers.Books.add
+POST    /book/save/:id              @controllers.Books.save(id :Int)
+POST    /book/create                @controllers.Books.create
 
-GET     /book/save                  @controllers.Books.bookAdd
+GET     /book/:id                   @controllers.Books.get(id: Int)
+GET     /book/:id/edit              @controllers.Books.edit(id: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
