@@ -1,9 +1,15 @@
 @(bookForm: Form[model.Book], id: Option[Int])(implicit flash: Flash, lang: Lang)
 
+@import ui.model.Button
 @import helper._
 @import ui.Helpers._
 
-@main("Edit Book") {
+@addOrEdit[T](add: => T, edit: => T) = @{
+    if (id.isDefined) edit else add
+}
+
+
+@main(addOrEdit("Add", "Edit") + " Book", addOrEdit(Nil, List(Button.deleteBook(id.get)))) {
     @helper.form(action = id map routes.Books.save getOrElse routes.Books.create(), 'class -> "form-horizontal") {
         <fieldset>
             <legend>
@@ -16,7 +22,7 @@
             @checkbox(bookForm("cool"))
         </fieldset>
         <p style="text-align: right">
-            <input type="submit" class="btn btn-default" value='@id.map(_ => "Save").getOrElse("Add")'>
+            <input type="submit" class="btn btn-default" value='@addOrEdit("Add", "Save")'>
             <a href="@{bookForm("id").value map (id => routes.Books.get(id.toInt)) getOrElse routes.Books.list()}">Cancel</a>
         </p>
     }

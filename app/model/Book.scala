@@ -6,6 +6,7 @@ trait BookDao {
   def findAll: List[Book]
   def get(id: Int): Option[Book]
   def saveOrUpdate(book: Book): Book
+  def delete(id: Int): Unit
 }
 
 class SimpleBookDao(initialBooks: List[Book]) extends BookDao {
@@ -28,5 +29,8 @@ class SimpleBookDao(initialBooks: List[Book]) extends BookDao {
 
       withId
     }
+
+  def delete(id: Int) =
+    books = books filterNot (_.id == Some(id))
 }
 

@@ -25,6 +25,12 @@ class Books(implicit inj: Injector) extends Controller with Injectable {
     withBook(id, book => views.html.books.edit(bindOError(bookForm, bookForm fill book), Some(id)))
   }
 
+  def delete(id: Int) = Action { implicit req =>
+    bookDao.delete(id)
+
+    Redirect(routes.Books.list()).flashing("success" -> s"Book with ID $id deleted!")
+  }
+
   def add = Action { implicit req =>
     Ok(views.html.books.edit(bindOError(bookForm, bookForm), None))
   }

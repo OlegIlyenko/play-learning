@@ -8,6 +8,7 @@ GET     /                           controllers.Application.index
 GET     /books                      @controllers.Books.list
 GET     /book/add                   @controllers.Books.add
 POST    /book/save/:id              @controllers.Books.save(id :Int)
+GET     /book/delete/:id            @controllers.Books.delete(id: Int)
 POST    /book/create                @controllers.Books.create
 
 GET     /book/:id                   @controllers.Books.get(id: Int)
