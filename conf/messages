@@ -9,4 +9,6 @@ form.label.author=Author
 form.label.publishYear=Year
 form.label.cool=Is it cool?
 
+message.deleted=Book with ID {0} deleted!
+
 format.boolean=

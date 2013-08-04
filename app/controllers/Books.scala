@@ -7,7 +7,8 @@ import play.api.data.Form
 import play.api.data.Forms
 import Forms._
 import play.api.http.Writeable
-import play.api.data.validation.{Valid, Invalid, ValidationResult, Constraint}
+import play.api.data.validation.{Valid, Invalid, Constraint}
+import play.api.i18n.Messages
 
 class Books(implicit inj: Injector) extends Controller with Injectable {
 
@@ -28,7 +29,7 @@ class Books(implicit inj: Injector) extends Controller with Injectable {
   def delete(id: Int) = Action { implicit req =>
     bookDao.delete(id)
 
-    Redirect(routes.Books.list()).flashing("success" -> s"Book with ID $id deleted!")
+    Redirect(routes.Books.list()).flashing("success" -> Messages("message.deleted", id))
   }
 
   def add = Action { implicit req =>

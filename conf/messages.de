@@ -3,3 +3,5 @@ title=Buchhandlung
 book.title = Buchinformation
 
 form.label.cool=Ist cool?
+
+message.deleted=Buch mit ID {0} wurde gelöscht!
