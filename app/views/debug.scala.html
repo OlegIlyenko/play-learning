@@ -3,9 +3,9 @@
 @import play.api.Play.current
 
 <footer class="navbar navbar-fixed-bottom">
-    <div class="container">
-        lang = @lang.code,
-        user = @current.configuration.getString("environment.user"),
-        date = @(new java.util.Date().format("yyyy-MM-dd HH:mm"))
-    </div>
+  <div class="container">
+    lang = @lang.code,
+    user = @current.configuration.getString("environment.user"),
+    date = @(new java.util.Date().format("yyyy-MM-dd HH:mm"))
+  </div>
 </footer>

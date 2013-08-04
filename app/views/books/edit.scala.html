@@ -5,25 +5,25 @@
 @import ui.Helpers._
 
 @addOrEdit[T](add: => T, edit: => T) = @{
-    if (id.isDefined) edit else add
+  if (id.isDefined) edit else add
 }
 
 
 @main(addOrEdit("Add", "Edit") + " Book", addOrEdit(Nil, List(Button.deleteBook(id.get)))) {
-    @helper.form(action = id map routes.Books.save getOrElse routes.Books.create(), 'class -> "form-horizontal") {
-        <fieldset>
-            <legend>
-                Book Detail
-            </legend>
+  @helper.form(action = id map routes.Books.save getOrElse routes.Books.create(), 'class -> "form-horizontal") {
+    <fieldset>
+      <legend>
+        Book Detail
+      </legend>
 
-            @inputText(bookForm("title"), 'class -> "form-control")
-            @inputText(bookForm("author"), 'class -> "form-control")
-            @inputText(bookForm("publishYear"), 'class -> "form-control")
-            @checkbox(bookForm("cool"))
-        </fieldset>
-        <p style="text-align: right">
-            <input type="submit" class="btn btn-default" value='@addOrEdit("Add", "Save")'>
-            <a href="@{bookForm("id").value map (id => routes.Books.get(id.toInt)) getOrElse routes.Books.list()}">Cancel</a>
-        </p>
-    }
+      @inputText(bookForm("title"), 'class -> "form-control")
+      @inputText(bookForm("author"), 'class -> "form-control")
+      @inputText(bookForm("publishYear"), 'class -> "form-control")
+      @checkbox(bookForm("cool"))
+    </fieldset>
+    <p style="text-align: right">
+      <input type="submit" class="btn btn-default" value='@addOrEdit("Add", "Save")'>
+      <a href="@{bookForm("id").value map (id => routes.Books.get(id.toInt)) getOrElse routes.Books.list()}">Cancel</a>
+    </p>
+  }
 }
