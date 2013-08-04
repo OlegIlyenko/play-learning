@@ -7,6 +7,7 @@ import play.api.data.Form
 import play.api.data.Forms
 import Forms._
 import play.api.http.Writeable
+import play.api.data.validation.{Valid, Invalid, ValidationResult, Constraint}
 
 class Books(implicit inj: Injector) extends Controller with Injectable {
 
@@ -58,10 +59,12 @@ class Books(implicit inj: Injector) extends Controller with Injectable {
   private def withBook[C](id: Int, fn: Book => C)(implicit writeable: Writeable[C]) =
     bookDao.get(id) map (book => Ok(fn(book))) getOrElse NotFound(s"Book with ID $id not found!")
 
+  val notMe = Constraint((v: String) => if (v.equalsIgnoreCase("Me")) Invalid("You are not allowed! :D") else Valid)
+
   val bookForm = Form[Book](mapping(
     "id" -> optional(number),
     "title" -> nonEmptyText,
-    "author" -> nonEmptyText,
+    "author" -> nonEmptyText.verifying(notMe),
     "publishYear" -> number(min = 1900, max = 3000),
     "cool" -> boolean,
     "owners" -> Forms.list(nonEmptyText)
