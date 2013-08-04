@@ -3,9 +3,14 @@
 # ~~~~
 
 # Home page
-GET     /                           @controllers.Application.index
-GET     /greet                      @controllers.Application.greet(times: Int)
-GET     /books                      @controllers.Application.books
+GET     /                           controllers.Application.index
+
+GET     /books                      @controllers.Books.books
+GET     /book/add                   @controllers.Books.bookAdd
+GET     /book/:id                   @controllers.Books.book(id: Int)
+GET     /book/:id/edit              @controllers.Books.bookEdit(id: Int)
+
+GET     /book/save                  @controllers.Books.bookAdd
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, buttons: List[ui.model.Button] = Nil)(content: Html)(implicit flash: Flash, lang: Lang)
 
 <!DOCTYPE html>
 
@@ -10,6 +10,7 @@
 
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.css")">
+        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap-glyphicons.css")">
 
         <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
         <script src="@routes.Assets.at("javascripts/bootstrap.js")" type="text/javascript"></script>
@@ -17,17 +18,51 @@
     <body>
         <div class="navbar navbar-fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="/books">@Messages("title")</a>
-                @*<ul class="nav navbar-nav">*@
-                    @*<li class="active"><a href="#">Home</a></li>*@
-                    @*<li><a href="#">Link</a></li>*@
-                    @*<li><a href="#">Link</a></li>*@
-                @*</ul>*@
+                <div class="row">
+                    <div class="col-lg-8 col-lg-offset-1">
+                        <a class="navbar-brand" href="/books">@Messages("title")</a>
+                        @if(buttons.nonEmpty) {
+                            <ul class="nav navbar-nav">
+                                @for(button <- buttons) {
+                                    <li>
+                                        <a href="@button.call">
+                                            @if(button.icon.isDefined) {
+                                                <span class="glyphicon glyphicon-@button.icon.get"></span>
+                                            }
+
+                                            <span class="top-button-label">@button.name</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="container">
-            @content
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-1">
+                    <h2>@title</h2>
+
+                    @if(flash.get("success").isDefined){
+                        <div class="alert alert-success">
+                            @flash.get("success")
+                        </div>
+                    }
+
+                    @if(flash.get("error").isDefined){
+                        <div class="alert alert-error">
+                            @flash.get("error")
+                        </div>
+                    }
+
+                    @content
+                </div>
+            </div>
         </div>
+
+@*        @debug()*@
     </body>
 </html>

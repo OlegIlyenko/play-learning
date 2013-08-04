@@ -5,3 +5,27 @@ body {
 h2 {
     padding-bottom: 20px;
 }
+
+.cool-book {
+    background-color: #cfffd4;
+}
+
+.uncool-book {
+    background-color: #ffe0d9;
+}
+
+.top-button-label {
+    padding-left: 5px;
+}
+
+.form-group input[type=checkbox] {
+    margin-top: 12px;
+}
+
+.green {
+    color: #036508;
+}
+
+.red {
+    color: #65000f;
+}

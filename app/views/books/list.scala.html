@@ -1,22 +1,28 @@
-@(books: List[model.Book])
+@(books: List[model.Book])(implicit flash: Flash, lang: Lang)
 
-@main(Messages("books.title")) {
+@import ui.model.Button
 
-   <h2>@Messages("books.title")</h2>
-
+@main(Messages("books.title"), List(Button.addBook)) {
     <table class="table">
         <tr>
             <th>Title</th>
             <th>Author</th>
             <th>Year</th>
+            <th>Cool</th>
+            <th>Owners</th>
         </tr>
         @books.map { book =>
-          <tr>
-              <td>@book.title</td>
-              <td>@book.author</td>
-              <td>@book.publishYear</td>
-          </tr>
+            <tr>
+                <td>
+                    @book.id.map{ id =>
+                        <a href="@routes.Books.book(id)">@book.title</a>
+                    }.getOrElse(book.title)
+                </td>
+                <td>@book.author</td>
+                <td>@book.publishYear</td>
+                <td>@coolness(book)</td>
+                <td>@book.owners.mkString(", ")</td>
+            </tr>
         }
     </table>
-
 }

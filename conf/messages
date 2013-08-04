@@ -1,3 +1,12 @@
 title = Book Store
 
 books.title = Here are the books!
+
+book.title = Book Info
+
+form.label.title=Title
+form.label.author=Author
+form.label.publishYear=Year
+form.label.cool=Is it cool?
+
+format.boolean=

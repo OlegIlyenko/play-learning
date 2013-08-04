@@ -1,0 +1,24 @@
+@(book: model.Book)(implicit flash: Flash, lang: Lang)
+
+@import ui.model.Button
+
+@main(Messages("book.title"), List(Button.editBook(book.id.get), Button.addBook)) {
+    <table class="table">
+        <tr>
+            <th>Title</th>
+            <td>@book.title</td>
+        </tr>
+        <tr>
+            <th>Author</th>
+            <td>@book.author</td>
+        </tr>
+        <tr>
+            <th>Year</th>
+            <td>@book.publishYear</td>
+        </tr>
+        <tr>
+            <th>Is Book Cool?</th>
+            <td>@coolness(book)</td>
+        </tr>
+    </table>
+}

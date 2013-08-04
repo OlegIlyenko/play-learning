@@ -1,1 +1,5 @@
-title=Buecher laden
+title=Bücherei
+
+book.title = Buch Information
+
+form.label.cool=Ist cool?
