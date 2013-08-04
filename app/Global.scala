@@ -4,10 +4,6 @@ import play.api.GlobalSettings
 import scaldi.Module
 import scaldi.play.ScaldiSupport
 
-/**
- *
- * @author Oleg Ilyenko
- */
 object Global extends GlobalSettings with ScaldiSupport {
   def applicationModule = new Module {
     // controllers
