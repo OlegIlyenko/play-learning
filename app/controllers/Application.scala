@@ -13,7 +13,7 @@ object Application extends Controller {
 
   def options(path: String) = Action { implicit req =>
     val routes = Play.current.routes.get
-    val supportedMethods = methods.filter(m => routes.handlerFor(req.copy(method = m)).isDefined)
+    val supportedMethods = OptionMethods.filter(m => routes.handlerFor(req.copy(method = m)).isDefined)
 
     if (supportedMethods.nonEmpty)
       Ok(supportedMethods mkString "\n")
