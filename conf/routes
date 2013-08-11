@@ -5,6 +5,7 @@
 OPTIONS /*path                      controllers.Application.options(path)
 
 GET     /                           controllers.Application.index
+GET     /js-routes                  controllers.Application.jsRoutes
 
 GET     /books                      @controllers.Books.list
 GET     /book/add                   @controllers.Books.add

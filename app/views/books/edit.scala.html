@@ -8,7 +8,6 @@
   if (id.isDefined) edit else add
 }
 
-
 @main(addOrEdit("Add", "Edit") + " Book", addOrEdit(Nil, List(Button.deleteBook(id.get)))) {
   @helper.form(action = id map routes.Books.save getOrElse routes.Books.create(), 'class -> "form-horizontal") {
     <fieldset>
