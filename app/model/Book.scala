@@ -1,12 +1,17 @@
 package model
 
-case class Book(id: Option[Int], title: String, author: String, publishYear: Int, cool: Boolean, owners: List[String])
+import org.joda.time.DateTime
+
+case class Comment(date: DateTime, comment: String)
+
+case class Book(id: Option[Int], title: String, author: String, publishYear: Int, cool: Boolean, comments: List[Comment])
 
 trait BookDao {
   def findAll: List[Book]
   def get(id: Int): Option[Book]
   def saveOrUpdate(book: Book): Book
   def delete(id: Int): Unit
+  def addComment(id: Int, comment: Comment): Unit
 }
 
 class SimpleBookDao(initialBooks: List[Book]) extends BookDao {
@@ -18,7 +23,8 @@ class SimpleBookDao(initialBooks: List[Book]) extends BookDao {
 
   def saveOrUpdate(book: Book) =
     if (book.id.isDefined) {
-      books = books.updated(books.indexWhere(_.id == book.id), book)
+      val oldBook = findById(book.id.get)
+      books = books.updated(books indexOf oldBook, book copy (comments = oldBook.comments))
 
       book
     } else {
@@ -30,7 +36,16 @@ class SimpleBookDao(initialBooks: List[Book]) extends BookDao {
       withId
     }
 
+  def addComment(id: Int, comment: Comment): Unit = {
+    val book = findById(id)
+
+    books = books.updated(books indexOf book, book copy (comments = comment +: book.comments))
+  }
+
   def delete(id: Int) =
     books = books filterNot (_.id == Some(id))
+
+  private def findById(id: Int) =
+    books.find(_.id == Some(id)) getOrElse (throw new IllegalStateException(s"Oooops... very strange, but book does not exist: $id"))
 }
 

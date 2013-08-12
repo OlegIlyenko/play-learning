@@ -9,7 +9,7 @@
       <th>Author</th>
       <th>Year</th>
       <th>Cool</th>
-      <th>Owners</th>
+      <th>Comments</th>
     </tr>
     @books.map { book =>
       <tr>
@@ -21,7 +21,7 @@
         <td>@book.author</td>
         <td>@book.publishYear</td>
         <td>@coolness(book)</td>
-        <td>@book.owners.mkString(", ")</td>
+        <td>@book.comments.size</td>
       </tr>
     }
   </table>

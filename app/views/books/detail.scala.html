@@ -1,8 +1,16 @@
 @(book: model.Book)(implicit flash: Flash, lang: Lang)
 
-@import ui.model.Button
+@import ui.model.Button._
 
-@main(Messages("book.title"), List(Button.editBook(book.id.get), Button.deleteBook(book.id.get), Button.addBook)) {
+@buttons = @{
+  List(editBook(book.id.get), deleteBook(book.id.get), addBook)
+}
+
+@extraJs = {
+  <script src="@routes.Assets.at("javascripts/comments.js")" type="text/javascript"></script>
+}
+
+@main(Messages("book.title"), head = extraJs, buttons = buttons) {
   <table class="table">
     <tr>
       <th>Title</th>
@@ -21,4 +29,6 @@
       <td>@coolness(book)</td>
     </tr>
   </table>
+
+  @comments(book.id.get)
 }

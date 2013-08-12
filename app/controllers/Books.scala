@@ -2,17 +2,27 @@ package controllers
 
 import play.api.mvc._
 import scaldi.{Injectable, Injector}
-import model.{Book, BookDao}
+import model.{Comment, Book, BookDao}
 import play.api.data.Form
 import play.api.data.Forms
 import Forms._
 import play.api.http.Writeable
 import play.api.data.validation.{Valid, Invalid, Constraint}
 import play.api.i18n.Messages
+import play.api.libs.json.JsValue
+import akka.actor.ActorRef
+import model.CommentActionMessage.Join
+import akka.pattern.ask
+import scala.concurrent.duration._
+import akka.util.Timeout
+import play.api.libs.iteratee.{Enumerator, Iteratee}
 
 class Books(implicit inj: Injector) extends Controller with Injectable {
 
   val bookDao = inject [BookDao]
+  val comments = inject [ActorRef] ('comments)
+
+  implicit val timeout = Timeout(5.seconds)
 
   def list = Action { implicit req =>
     Ok(views.html.books.list(bookDao.findAll))
@@ -54,6 +64,10 @@ class Books(implicit inj: Injector) extends Controller with Injectable {
     )
   }
 
+  def commentSocket(id: Int) = WebSocket.async[JsValue] { implicit req =>
+    (comments ? Join(id)).mapTo[(Iteratee[JsValue, _], Enumerator[JsValue])]
+  }
+
   private def bindOError[E, F <: Form[E], T](form: F, noErrorForm: => F)(implicit req: Request[T]) =
     flash.get("error") map (_ => form bind flash.data) getOrElse noErrorForm
 
@@ -74,6 +88,6 @@ class Books(implicit inj: Injector) extends Controller with Injectable {
     "author" -> nonEmptyText.verifying(notMe),
     "publishYear" -> number(min = 1900, max = 3000),
     "cool" -> boolean,
-    "owners" -> Forms.list(nonEmptyText)
+    "comments" -> ignored[List[Comment]](Nil)
   )(Book.apply)(Book.unapply))
 }

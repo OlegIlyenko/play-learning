@@ -1,0 +1,23 @@
+@(bookId: Int)
+
+<div ng-controller="CommentsCtrl" ng-init="init(@bookId)" class="comments">
+  <h3>Comments<span ng-show="comments.length"> ({{comments.length}})</span></h3>
+  <div class="text-success visitors" ng-show="viewerCount">{{viewerCount}} visitors are viewing this book!</div>
+
+  <div class="alert fade in" ng-show="errorMessage">
+    <button type="button" class="close" ng-click="hideError()">×</button>
+    {{errorMessage}}
+  </div>
+
+  <form class="form-inline" ng-submit="addComment()">
+    <input type="text" class="form-control" ng-model="newCommentText" placeholder="Add Comment...">
+    <button type="submit" class="btn btn-default">Add</button>
+  </form>
+
+  <ul>
+    <li ng-repeat="comment in comments">
+      <span class="comment-date">{{formatDate(comment.date)}}</span>
+      <span class="comment-text">{{comment.comment}}</span>
+    </li>
+  </ul>
+</div>
