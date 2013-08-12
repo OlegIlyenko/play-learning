@@ -11,11 +11,10 @@ import java.util.UUID
 
 object CommentActionMessage {
   type Message = JsValue
-  case class Viewer[T](iteratee: Iteratee[Message, Unit], enumerator: Enumerator[Message], channel: Channel[Message])
 
   case class Join(id: Int)
   case class Leave(id: Int, viewerId: String)
-  case class WelcomeViewer(id: Int, viewerId: String)
+  case class WelcomeViewer(id: Int, viewerId: String, channel: Channel[Message])
   case class AddComment(id: Int, comment: Comment)
   case class ErrorHappen(id: Int, viewerId: String, message: String)
 }
@@ -49,28 +48,28 @@ class CommentsRouter(implicit inj: Injector) extends Actor with Injectable {
   val bookDao = inject [BookDao]
   var viewerCount: Map[Int, Int] = Map.empty.withDefault(_ => 0)
 
-  var viewers : Map[Int, Map[String, Viewer[Message]]] =
+  var viewers : Map[Int, Map[String, Channel[Message]]] =
     Map.empty.withDefault(_ => Map.empty)
 
   def receive = {
     case Join(id) =>
-      val (enumerator, channel) = Concurrent.broadcast[Message]
       val viewerId = UUID.randomUUID.toString
-      val iteratee = createIteratee(id, viewerId)
+      val enumerator = Concurrent.unicast[Message](
+        self ! WelcomeViewer(id, viewerId, _)
+      )
 
+      sender ! (createIteratee(id, viewerId), enumerator)
+    case WelcomeViewer(id, viewerId, channel) =>
       viewerCount = viewerCount.updated(id, viewerCount(id) + 1)
-      viewers = viewers.updated(id, viewers(id) + (viewerId -> Viewer(iteratee, enumerator, channel)))
+      viewers = viewers.updated(id, viewers(id) + (viewerId -> channel))
 
-      sender ! (iteratee, enumerator)
-      self ! WelcomeViewer(id, viewerId)
+      broadcast(id, ViewerUpdate(viewerCount(id)))
+      push(viewers(id)(viewerId), CommentList(bookDao.get(id).get.comments))
     case ErrorHappen(id, viewerId, message) =>
-      push(viewers(id)(viewerId).channel, Error(message))
+      push(viewers(id)(viewerId), Error(message))
     case AddComment(id, comment) =>
       bookDao addComment (id, comment)
       broadcast(id, CommentAdded(comment))
-    case WelcomeViewer(id, viewerId) =>
-      broadcast(id, ViewerUpdate(viewerCount(id)))
-      push(viewers(id)(viewerId).channel, CommentList(bookDao.get(id).get.comments))
     case Leave(id, viewerId) =>
       viewerCount = viewerCount.updated(id, viewerCount(id) - 1)
       viewers = viewers.updated(id, viewers(id).filterNot(_._1 == viewerId))
@@ -90,7 +89,7 @@ class CommentsRouter(implicit inj: Injector) extends Actor with Injectable {
   }
 
   def broadcast[T](id: Int, msg: T)(implicit writes: Writes[T]) =
-    viewers(id).foreach {case (_, Viewer(_, _, channel)) =>
+    viewers(id).foreach {case (_, channel) =>
       push(channel, msg)
     }
 
