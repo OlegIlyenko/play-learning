@@ -19,8 +19,8 @@ object Global extends GlobalSettings with ScaldiSupport {
     // DAO
 
     bind [BookDao] to new SimpleBookDao(List(
-      Book(Some(1), "Book ", "me", 2013, cool = false, Nil),
-      Book(Some(2), "Programming in Scala", "Martin", 2000, cool = true, List(Comment(DateTime.now, "Me")))
+      Book(Some(1), "Management 3.0", "Jurgen Appelo", 2011, cool = true, Nil),
+      Book(Some(2), "Programming in Scala", "Martin Odersky", 2011, cool = true, List(Comment(DateTime.now, "Me")))
     ))
 
     bind [ActorRef] identifiedBy 'comments to
