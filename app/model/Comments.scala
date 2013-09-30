@@ -45,6 +45,8 @@ class CommentsRouter(implicit inj: Injector) extends Actor with Injectable {
   import model.CommentActionMessage._
   import model.CommentInfoMessage._
 
+  implicit val ctx = context.dispatcher
+
   val bookDao = inject [BookDao]
   var viewerCount: Map[Int, Int] = Map.empty.withDefault(_ => 0)
 
